@@ -43,7 +43,6 @@ def is_resource_sufficient(order_ingredient):
 
 
 def insert_coin():
-    import math
     print("Please insert coin: ")
     total = int(input("How many quarters?: ")) * 0.25
     total += int(input("How many dimes?: ")) * 0.10
@@ -52,10 +51,31 @@ def insert_coin():
     return total
 
 
-while True:
+def is_transaction_successful(drink_cost, money_received):
+    """Check that the user has inserted enough money to purchase the drink they selected."""
+    if money_received >= drink_cost:
+        change = round(money_received - drink_cost, 2)
+        print(f"Here is ${change} in change.")
+        global profit
+        profit += drink_cost
+        return True
+
+    else:
+        return "Sorry that's not enough money. Money refunded."
+
+
+def make_coffee(order_ingredient, drink_name):
+    for item in order_ingredient:
+        resources[item] -= order_ingredient[item]
+    print(f"Here is your {drink_name}. Enjoy!")
+
+
+is_on = True
+
+while is_on:
     order = input("What would you like? (espresso/latte/cappuccino): ").lower()
     if order == "off":
-        break
+        is_on = False
 
     elif order == "report":
         print(
@@ -67,7 +87,7 @@ while True:
     else:
         drink = MENU[order]
         if is_resource_sufficient(drink["ingredients"]):
-            insert_coin()
+            payment = insert_coin()
+            is_transaction_successful(drink["cost"], payment)
+            make_coffee(drink["ingredients"], order)
 
-print(MENU["espresso"]["ingredients"]["water"])
-print(resources["water"])
