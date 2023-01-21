@@ -71,23 +71,25 @@ def make_coffee(order_ingredient, drink_name):
 
 
 is_on = True
+try:
+    while is_on:
+        order = input("What would you like? (espresso/latte/cappuccino): ").lower()
+        if order == "off":
+            is_on = False
 
-while is_on:
-    order = input("What would you like? (espresso/latte/cappuccino): ").lower()
-    if order == "off":
-        is_on = False
+        elif order == "report":
+            print(
+                f"Water: {resources['water']}ml\n"
+                f"Milk: {resources['milk']}ml\n"
+                f"Coffee: {resources['coffee']}g\n"
+                f"Money: ${profit}\n"
+            )
+        else:
+            drink = MENU[order]
+            if is_resource_sufficient(drink["ingredients"]):
+                payment = insert_coin()
+                is_transaction_successful(drink["cost"], payment)
+                make_coffee(drink["ingredients"], order)
 
-    elif order == "report":
-        print(
-            f"Water: {resources['water']}ml\n"
-            f"Milk: {resources['milk']}ml\n"
-            f"Coffee: {resources['coffee']}g\n"
-            f"Money: ${profit}\n"
-        )
-    else:
-        drink = MENU[order]
-        if is_resource_sufficient(drink["ingredients"]):
-            payment = insert_coin()
-            is_transaction_successful(drink["cost"], payment)
-            make_coffee(drink["ingredients"], order)
-
+except KeyboardInterrupt:
+    print("\n[+] Quiting......")
